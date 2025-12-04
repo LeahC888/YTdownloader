@@ -34,8 +34,8 @@ jobs:
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
-          name: YouTube下載器-Windows
-          path: dist/YouTube下載器.exe
+          name: YTDownloader-Windows
+          path: dist/*.exe
 
   build-macos:
     runs-on: macos-latest
@@ -58,17 +58,16 @@ jobs:
         run: |
           python -m PyInstaller build_mac.spec --clean --noconfirm
 
-      - name: Create DMG (optional)
+      - name: Create ZIP
         run: |
-          # 創建簡單的 zip 包裝
           cd dist
-          zip -r YouTube下載器-macOS.zip YouTube下載器.app
+          zip -r YTDownloader-macOS.zip *.app
 
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
         with:
-          name: YouTube下載器-macOS
-          path: dist/YouTube下載器-macOS.zip
+          name: YTDownloader-macOS
+          path: dist/YTDownloader-macOS.zip
 
   release:
     needs: [build-windows, build-macos]
@@ -78,21 +77,21 @@ jobs:
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
         with:
-          name: YouTube下載器-Windows
+          name: YTDownloader-Windows
           path: ./windows
 
       - name: Download macOS artifact
         uses: actions/download-artifact@v4
         with:
-          name: YouTube下載器-macOS
+          name: YTDownloader-macOS
           path: ./macos
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./windows/YouTube下載器.exe
-            ./macos/YouTube下載器-macOS.zip
+            ./windows/*.exe
+            ./macos/*.zip
           draft: false
           prerelease: false
         env:
